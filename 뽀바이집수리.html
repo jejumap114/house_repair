@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>뽀바이집수리 — 스마트 집수리 견적</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F7F5F1;--surface:#FFF;--surface2:#F0EDE7;--ink:#18171A;--ink2:#6A6672;--ink3:#B0AAB8;--line:#E4E0D8;--accent:#2B5BE0;--accent-bg:#EEF2FF;--accent-hover:#1E47CC;--orange:#E86A30;--orange-bg:#FFF1EB;--green:#1B7F5B;--green-bg:#EDFAF3;--red:#D63B3B;--radius:14px;--shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.05);--shadow-lg:0 8px 40px rgba(0,0,0,.10);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);font-size:14px;}
+header{background:var(--surface);border-bottom:1px solid var(--line);padding:0 20px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:'DM Serif Display',serif;font-size:20px;}.logo-dot{color:var(--accent);}
+.badge{background:var(--accent-bg);color:var(--accent);font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;}
+.hero{padding:28px 20px 20px;}.hero h1{font-family:'DM Serif Display',serif;font-size:28px;line-height:1.25;margin-bottom:6px;}
+.hero h1 em{color:var(--accent);font-style:italic;}.hero p{color:var(--ink2);font-size:13px;font-weight:300;line-height:1.7;}
+.main{padding:0 20px 40px;display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;}
+.tabs{display:flex;background:var(--surface2);border-radius:9px;padding:3px;margin-bottom:16px;}
+.tab{flex:1;padding:8px 6px;border:none;background:transparent;border-radius:6px;font-size:11px;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .2s;font-family:'Noto Sans KR',sans-serif;}
+.tab.active{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);font-weight:700;}
+.card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--line);overflow:hidden;margin-bottom:14px;box-shadow:var(--shadow);}
+.card-head{padding:14px 18px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;}
+.card-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;}
+.card-icon{width:28px;height:28px;border-radius:8px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.card-icon.or{background:var(--orange-bg);}.card-icon.gr{background:var(--green-bg);}
+.card-body{padding:16px 18px;}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;}
+.cat-btn{padding:12px 8px 10px;background:var(--bg);border:1.5px solid var(--line);border-radius:9px;text-align:center;cursor:pointer;transition:all .18s;font-family:'Noto Sans KR',sans-serif;}
+.cat-btn:hover,.cat-btn.active{border-color:var(--accent);background:var(--accent-bg);}
+.cat-emoji{font-size:20px;display:block;margin-bottom:4px;}.cat-name{font-size:11px;font-weight:700;color:var(--ink);display:block;}
+.cat-sub{font-size:9px;color:var(--ink3);display:block;margin-top:1px;}
+.area-row{display:flex;align-items:center;gap:8px;margin-bottom:14px;background:var(--bg);padding:10px 12px;border-radius:9px;border:1px solid var(--line);}
+.area-lbl{font-size:11px;font-weight:700;color:var(--ink2);white-space:nowrap;}
+.area-inp{width:70px;padding:5px 8px;border:1.5px solid var(--line);border-radius:6px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;color:var(--ink);background:var(--surface);outline:none;text-align:center;transition:border-color .2s;}
+.area-inp:focus{border-color:var(--accent);}.area-unit{font-size:11px;color:var(--ink3);}
+.area-pyeong{font-size:11px;color:var(--accent);font-weight:700;margin-left:auto;}
+.item-list{display:flex;flex-direction:column;gap:5px;}
+.item-row{display:flex;align-items:center;padding:10px 12px;background:var(--bg);border:1.5px solid transparent;border-radius:9px;cursor:pointer;transition:all .18s;gap:8px;}
+.item-row:hover,.item-row.on{border-color:var(--accent);background:var(--accent-bg);}
+.item-chk{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--line);background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:10px;color:white;transition:all .18s;flex-shrink:0;}
+.item-row.on .item-chk{background:var(--accent);border-color:var(--accent);}
+.item-info{flex:1;min-width:0;}.item-name{font-size:12px;font-weight:500;}.item-sub{font-size:10px;color:var(--ink3);margin-top:1px;}
+.item-price{font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap;}
+.qty-row{display:flex;align-items:center;gap:5px;margin-top:5px;}
+.qty-btn{width:20px;height:20px;border-radius:5px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .15s;font-family:'Noto Sans KR',sans-serif;}
+.qty-btn:hover{background:var(--accent);color:white;border-color:var(--accent);}
+.qty-val{font-size:12px;font-weight:700;min-width:16px;text-align:center;}
+.upload-zone{border:2px dashed var(--line);border-radius:var(--radius);padding:28px 16px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);position:relative;}
+.upload-zone:hover{border-color:var(--accent);background:var(--accent-bg);}
+#photoInput{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.photo-preview{position:relative;margin-top:12px;border-radius:10px;overflow:hidden;border:1px solid var(--line);}
+.photo-preview img{width:100%;display:block;max-height:200px;object-fit:cover;}
+.photo-overlay{position:absolute;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;}
+.analyze-btn{background:white;color:var(--ink);border:none;border-radius:8px;padding:9px 18px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .2s;}
+.analyze-btn:hover{background:var(--accent);color:white;}.analyze-btn:disabled{opacity:.5;cursor:not-allowed;}
+.ai-result{margin-top:12px;padding:12px 14px;background:var(--green-bg);border:1px solid #B8EDD7;border-radius:9px;font-size:12px;line-height:1.7;white-space:pre-wrap;}
+.ai-result-head{font-size:10px;font-weight:700;color:var(--green);margin-bottom:5px;letter-spacing:.5px;}
+.quick-btns{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:9px;}
+.quick-btn{padding:5px 10px;background:var(--surface);border:1px solid var(--line);border-radius:20px;font-size:11px;cursor:pointer;font-family:'Noto Sans KR',sans-serif;color:var(--ink2);transition:all .15s;}
+.quick-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-bg);}
+.chat-msgs{height:200px;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:7px;background:var(--bg);border-radius:9px;margin-bottom:9px;}
+.chat-msgs::-webkit-scrollbar{width:3px;}.chat-msgs::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+.bubble{max-width:85%;padding:8px 12px;border-radius:10px;font-size:12px;line-height:1.6;}
+.bubble.ai{background:var(--surface);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:3px;}
+.bubble.user{background:var(--accent);color:white;align-self:flex-end;border-bottom-right-radius:3px;}
+.bubble.typing{color:var(--ink3);font-size:16px;letter-spacing:3px;background:var(--surface);border:1px solid var(--line);align-self:flex-start;}
+.chat-row{display:flex;gap:7px;}
+.chat-in{flex:1;padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-size:12px;font-family:'Noto Sans KR',sans-serif;background:var(--surface);outline:none;color:var(--ink);transition:border-color .2s;}
+.chat-in:focus{border-color:var(--accent);}
+.send-btn{padding:9px 14px;background:var(--accent);color:white;border:none;border-radius:8px;cursor:pointer;font-size:12px;font-weight:700;font-family:'Noto Sans KR',sans-serif;transition:all .2s;}
+.send-btn:hover{background:var(--accent-hover);}.send-btn:disabled{opacity:.45;cursor:not-allowed;}
+.cta-box{background:var(--accent-bg);border:1.5px solid var(--accent);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;text-align:center;}
+.cta-box p{font-size:11px;color:var(--accent);font-weight:700;margin-bottom:4px;}
+.cta-tel{font-family:'DM Serif Display',serif;font-size:22px;color:var(--accent);letter-spacing:-0.5px;}
+.quote-top{background:var(--ink);border-radius:var(--radius);padding:20px;margin-bottom:12px;}
+.qt-eyebrow{font-size:9px;color:rgba(255,255,255,.4);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.qt-total{font-family:'DM Serif Display',serif;font-size:28px;color:white;margin-bottom:3px;}
+.qt-total span{color:#7B9EFF;}.qt-note{font-size:10px;color:rgba(255,255,255,.35);margin-bottom:14px;}
+.qt-divider{height:1px;background:rgba(255,255,255,.08);margin-bottom:12px;}
+.qt-row{display:flex;justify-content:space-between;font-size:11px;margin-bottom:7px;}
+.qt-row-name{color:rgba(255,255,255,.55);}.qt-row-amt{color:rgba(255,255,255,.85);font-weight:600;}
+.qt-empty{font-size:11px;color:rgba(255,255,255,.25);text-align:center;padding:4px 0;}
+.info-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;}
+.info-line{font-size:11px;color:var(--ink2);line-height:2.1;}.info-line span{color:var(--green);font-weight:700;}
+.print-btn{width:100%;padding:12px;background:var(--green);color:white;border:none;border-radius:9px;font-size:13px;font-weight:700;font-family:'Noto Sans KR',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;}
+.print-btn:hover{background:#166A4C;transform:translateY(-1px);}.print-btn:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+/* ADMIN */
+.admin-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;}
+.admin-inp{padding:8px 11px;border:1.5px solid var(--line);border-radius:8px;font-size:12px;font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);outline:none;transition:border-color .2s;}
+.admin-inp:focus{border-color:var(--accent);}
+.admin-sel{padding:8px 11px;border:1.5px solid var(--line);border-radius:8px;font-size:12px;font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--ink);outline:none;}
+.admin-btn{padding:8px 13px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;white-space:nowrap;transition:all .2s;}
+.admin-btn.pr{background:var(--accent);color:white;}.admin-btn.pr:hover{background:var(--accent-hover);}
+.admin-btn.dn{background:#FEE2E2;color:var(--red);font-size:11px;padding:5px 9px;}
+.admin-btn.dn:hover{background:var(--red);color:white;}
+.admin-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px;}
+.admin-table{width:100%;border-collapse:collapse;font-size:12px;}
+.admin-table th{background:var(--bg);padding:8px 10px;text-align:left;font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;border-bottom:1px solid var(--line);}
+.admin-table td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle;}
+.admin-table tr:last-child td{border-bottom:none;}
+.adiv{height:1px;background:var(--line);margin:12px 0;}
+.cat-card-admin{background:var(--bg);border:1.5px solid var(--line);border-radius:9px;padding:12px 8px 9px;cursor:pointer;transition:all .18s;position:relative;text-align:center;}
+.cat-card-admin:hover,.cat-card-admin.sel{border-color:var(--accent);background:var(--accent-bg);}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:white;padding:10px 20px;border-radius:9px;font-size:12px;font-weight:500;box-shadow:var(--shadow-lg);z-index:999;transition:transform .3s ease;pointer-events:none;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+@media(max-width:700px){.main{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">뽀바이집수리<span class="logo-dot">.</span></div>
+  <div class="badge">AI POWERED</div>
+</header>
+<div class="hero">
+  <h1>집수리 견적,<br><em>AI</em>가 분석합니다</h1>
+  <p>제주도 전 지역 · 무료 방문 견적 · 📞 010-9093-1727</p>
+</div>
+<div class="main">
+  <div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('manual',this)">📋 항목 선택</button>
+      <button class="tab" onclick="switchTab('photo',this)">📷 사진 분석</button>
+      <button class="tab" onclick="switchTab('chat',this)">🤖 AI 상담</button>
+      <button class="tab" onclick="switchTab('admin',this)">⚙️ 관리</button>
+    </div>
+
+    <!-- 항목 선택 -->
+    <div id="tab-manual">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><div class="card-icon">🏠</div>카테고리 선택</div></div>
+        <div class="card-body"><div class="cat-grid" id="catGrid"><div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--ink3);font-size:12px;">⏳ 불러오는 중...</div></div></div>
+      </div>
+      <div class="card" id="itemsCard" style="display:none;">
+        <div class="card-head"><div class="card-title"><div class="card-icon or">🔧</div><span id="itemsTitle">항목 선택</span></div></div>
+        <div class="card-body">
+          <div class="area-row">
+            <span class="area-lbl">공사 면적</span>
+            <input type="number" class="area-inp" id="areaInp" value="25" min="1">
+            <span class="area-unit">㎡</span>
+            <span class="area-pyeong" id="pyeong">약 7.6평</span>
+          </div>
+          <div class="item-list" id="itemList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 사진 분석 -->
+    <div id="tab-photo" style="display:none;">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><div class="card-icon or">📷</div>사진 AI 분석</div></div>
+        <div class="card-body">
+          <div class="upload-zone" id="uploadZone">
+            <input type="file" id="photoInput" accept="image/*">
+            <div style="font-size:32px;margin-bottom:8px;">🖼️</div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:4px;">사진을 클릭하거나 드래그하세요</div>
+            <div style="font-size:11px;color:var(--ink3);">수리가 필요한 부위 사진을 올려주세요</div>
+          </div>
+          <div id="photoPreviewArea" style="display:none;">
+            <div class="photo-preview">
+              <img id="photoImg" src="" alt="">
+              <div class="photo-overlay">
+                <button class="analyze-btn" id="analyzeBtn" onclick="analyzePhoto()">✨ AI로 분석하기</button>
+              </div>
+            </div>
+            <div id="aiResultArea" style="display:none;">
+              <div class="ai-result"><div class="ai-result-head">🤖 AI 분석 결과</div><div id="aiResultText"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI 상담 -->
+    <div id="tab-chat" style="display:none;">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><div class="card-icon gr">🤖</div>AI 상담사 — 뽀바이집수리</div></div>
+        <div class="card-body">
+          <div class="quick-btns">
+            <button class="quick-btn" onclick="quickAsk('욕실 전체 리모델링 비용이 궁금해요')">욕실 리모델링</button>
+            <button class="quick-btn" onclick="quickAsk('도배 비용 알고 싶어요')">도배 비용</button>
+            <button class="quick-btn" onclick="quickAsk('바닥재 교체하려면 얼마나 걸려요?')">바닥재 교체</button>
+            <button class="quick-btn" onclick="quickAsk('방문 견적은 어떻게 신청하나요?')">방문 견적 신청</button>
+            <button class="quick-btn" onclick="quickAsk('공사 기간이 얼마나 되나요?')">공사 기간</button>
+          </div>
+          <div class="chat-msgs" id="chatMsgs">
+            <div class="bubble ai">안녕하세요! 뽀바이집수리 AI 상담사입니다 🏠<br>집수리 비용, 시공 방법, 방문 견적 등 무엇이든 물어보세요!</div>
+          </div>
+          <div class="chat-row">
+            <input class="chat-in" id="chatIn" placeholder="예: 욕실 타일 교체하면 얼마나 나와요?">
+            <button class="send-btn" id="sendBtn" onclick="sendChat()">전송</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 관리 -->
+    <div id="tab-admin" style="display:none;">
+      <div class="card">
+        <div class="card-head"><div class="card-title"><div class="card-icon">🏠</div>카테고리 관리</div></div>
+        <div class="card-body">
+          <div class="admin-lbl">새 카테고리 추가</div>
+          <div class="admin-row">
+            <input class="admin-inp" id="nCatEmoji" placeholder="이모지" style="width:60px;">
+            <input class="admin-inp" id="nCatName" placeholder="이름" style="flex:1;">
+            <input class="admin-inp" id="nCatDesc" placeholder="설명" style="flex:1.5;">
+            <input class="admin-inp" id="nCatOrder" type="number" placeholder="순서" value="10" style="width:55px;">
+            <button class="admin-btn pr" onclick="addCategory()">+ 추가</button>
+          </div>
+          <div class="adiv"></div>
+          <div class="admin-lbl">카테고리 목록 — <span style="font-weight:400;text-transform:none;letter-spacing:0;">클릭하면 항목 관리</span></div>
+          <div id="adminCatGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;"></div>
+        </div>
+      </div>
+      <div class="card" id="adminItemSection" style="display:none;">
+        <div class="card-head">
+          <div class="card-title"><div class="card-icon or">🔧</div><span id="adminItemTitle">수리 항목</span></div>
+          <button class="admin-btn dn" onclick="closeAdminItems()">✕ 닫기</button>
+        </div>
+        <div class="card-body">
+          <div class="admin-lbl">새 항목 추가</div>
+          <div class="admin-row">
+            <input class="admin-inp" id="nItemName" placeholder="항목명" style="flex:2;">
+            <input class="admin-inp" id="nItemDesc" placeholder="설명" style="flex:2;">
+            <input class="admin-inp" id="nItemPrice" type="number" placeholder="단가" style="width:100px;">
+            <select class="admin-sel" id="nItemUnit">
+              <option value="개당">개당</option><option value="㎡당">㎡당</option>
+              <option value="연당">연당</option><option value="식">식</option>
+              <option value="점당">점당</option><option value="창당">창당</option>
+              <option value="대당">대당</option><option value="개소당">개소당</option>
+            </select>
+            <button class="admin-btn pr" onclick="addItem()">+ 추가</button>
+          </div>
+          <div class="adiv"></div>
+          <table class="admin-table">
+            <thead><tr><th>항목명</th><th>설명</th><th>단가</th><th>단위</th><th></th></tr></thead>
+            <tbody id="itemTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 견적 패널 -->
+  <div style="position:sticky;top:60px;">
+    <div class="cta-box">
+      <p>📞 무료 방문 견적 문의</p>
+      <div class="cta-tel">010-9093-1727</div>
+    </div>
+    <div class="quote-top">
+      <div class="qt-eyebrow">예상 견적 금액</div>
+      <div class="qt-total">₩ <span id="totalNum">0</span></div>
+      <div class="qt-note" id="qtNote">항목을 선택하면 자동 계산됩니다</div>
+      <div class="qt-divider"></div>
+      <div id="qtRows"><div class="qt-empty">선택된 항목 없음</div></div>
+    </div>
+    <div class="info-card">
+      <div class="info-line"><span>✔</span> 제주도 전 지역 시공</div>
+      <div class="info-line"><span>✔</span> 인건비 + 재료비 포함</div>
+      <div class="info-line"><span>✔</span> VAT 10% 별도</div>
+      <div class="info-line"><span>✔</span> 현장에 따라 ±15%</div>
+      <div class="info-line"><span>✔</span> 무료 방문 견적 가능</div>
+    </div>
+    <button class="print-btn" id="printBtn" onclick="printQuote()" disabled>📄 견적서 출력</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Supabase 설정 ──
+const SB_URL = 'https://xdhbecngeqmouussslld.supabase.co';
+const SB_KEY = 'sb_publishable_pgrLzPkvLvUcmz3ukcm6PA_CYSK2n16';
+const H = {'apikey':SB_KEY,'Authorization':`Bearer ${SB_KEY}`,'Content-Type':'application/json'};
+
+// ── AI 상담 시스템 프롬프트 ──
+const SYSTEM_PROMPT = `당신은 제주도 집수리 전문업체 '뽀바이집수리'의 AI 상담사입니다.
+친절하고 전문적으로 2~4문장으로 답하세요. 반드시 한국어만 사용하세요.
+
+[업체 정보]
+- 업체명: 뽀바이집수리
+- 지역: 제주도 전 지역 시공 가능
+- 연락처: 010-9093-1727
+- 주요 시공: 욕실·주방 리모델링, 바닥재 교체, 도배·도장, 전기, 배관, 철거
+- 무료 방문 견적 제공
+- 하자보수 서비스 제공
+
+[상담 원칙]
+- 비용 질문엔 대략적인 범위만 안내하고, 정확한 견적은 무료 방문 견적 권유
+- 시공 기간, 하자보수, 재료 등 전문적으로 안내
+- 방문 견적 문의 시 연락처(010-9093-1727) 안내
+- 과도한 비용을 약속하거나 확정하지 말 것`;
+
+async function sbGet(t,p=''){const r=await fetch(`${SB_URL}/rest/v1/${t}?${p}`,{headers:H});if(!r.ok)throw new Error(r.status);return r.json();}
+async function sbPost(t,d){const r=await fetch(`${SB_URL}/rest/v1/${t}`,{method:'POST',headers:{...H,'Prefer':'return=representation'},body:JSON.stringify(d)});if(!r.ok){const e=await r.json();throw new Error(e.message||r.status);}return r.json();}
+async function sbDel(t,f){const q=typeof f==='number'?`id=eq.${f}`:f;const r=await fetch(`${SB_URL}/rest/v1/${t}?${q}`,{method:'DELETE',headers:H});if(!r.ok)throw new Error(r.status);}
+
+let CATS=[],IDB={},selCat=null,selItems={},areaM2=25,chatHist=[],photoBase64=null,adminCatId=null;
+
+async function init(){
+  document.getElementById('areaInp').addEventListener('input',e=>{
+    areaM2=parseFloat(e.target.value)||25;
+    document.getElementById('pyeong').textContent=`약 ${(areaM2/3.3058).toFixed(1)}평`;
+    updateQuote();
+  });
+  try{
+    const d=await sbGet('categories','order=sort_order.asc');
+    CATS=d.map(c=>({id:c.id,e:c.emoji||'🔧',n:c.name,s:c.description||''}));
+    renderCats();
+  }catch(e){
+    document.getElementById('catGrid').innerHTML=`<div style="grid-column:1/-1;color:var(--red);padding:16px;font-size:12px;">❌ DB 연결 실패: ${e.message}</div>`;
+  }
+}
+
+function renderCats(){
+  document.getElementById('catGrid').innerHTML=CATS.length
+    ?CATS.map(c=>`<div class="cat-btn ${selCat&&selCat.id===c.id?'active':''}" onclick="selectCat(${c.id})">
+        <span class="cat-emoji">${c.e}</span><span class="cat-name">${c.n}</span><span class="cat-sub">${c.s}</span>
+      </div>`).join('')
+    :`<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--ink3);font-size:12px;">카테고리 없음</div>`;
+}
+
+async function selectCat(id){
+  selCat=CATS.find(c=>c.id==id); if(!selCat)return;
+  renderCats();
+  document.getElementById('itemsCard').style.display='block';
+  document.getElementById('itemsTitle').textContent=`${selCat.e} ${selCat.n} 수리 항목`;
+  setTimeout(()=>document.getElementById('itemsCard').scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+  document.getElementById('itemList').innerHTML=`<div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px;">⏳ 불러오는 중...</div>`;
+  if(!IDB[id]){
+    try{const d=await sbGet('repair_items',`category_id=eq.${id}&order=id.asc`);IDB[id]=d.map(i=>({id:String(i.id),n:i.name,s:i.description||'',u:i.unit_price,ul:i.unit_label||'개당'}));}
+    catch(e){document.getElementById('itemList').innerHTML=`<div style="color:var(--red);padding:12px;font-size:12px;">❌ ${e.message}</div>`;return;}
+  }
+  renderItems(IDB[id]);
+}
+
+function renderItems(items){
+  document.getElementById('itemList').innerHTML=(items||[]).map(item=>{
+    const sel=selItems[item.id],qty=sel?sel.qty:1;
+    return `<div class="item-row ${sel?'on':''}" onclick="toggleItem('${item.id}')">
+      <div class="item-chk">${sel?'✓':''}</div>
+      <div class="item-info">
+        <div class="item-name">${item.n}</div>
+        <div class="item-sub">${item.s} · ${item.ul}</div>
+        ${sel?`<div class="qty-row" onclick="event.stopPropagation()">
+          <button class="qty-btn" onclick="chgQty('${item.id}',-1)">−</button>
+          <span class="qty-val">${qty}</span>
+          <button class="qty-btn" onclick="chgQty('${item.id}',1)">+</button>
+        </div>`:''}
+      </div>
+      <div class="item-price">${item.u.toLocaleString()}원</div>
+    </div>`;
+  }).join('')||`<div style="text-align:center;padding:16px;color:var(--ink3);font-size:12px;">등록된 항목 없음</div>`;
+}
+
+function toggleItem(id){
+  if(!selCat)return;
+  const items=IDB[selCat.id]||[];
+  const item=items.find(i=>i.id===id);
+  if(!item)return;
+  if(selItems[id])delete selItems[id]; else selItems[id]={item,qty:1};
+  renderItems(items); updateQuote();
+}
+function chgQty(id,d){
+  if(!selItems[id]||!selCat)return;
+  selItems[id].qty=Math.max(1,selItems[id].qty+d);
+  renderItems(IDB[selCat.id]||[]); updateQuote();
+}
+
+function updateQuote(){
+  const entries=Object.values(selItems);
+  const total=entries.reduce((s,{item,qty})=>s+item.u*qty*(item.ul.includes('㎡')?areaM2:1),0);
+  document.getElementById('totalNum').textContent=total.toLocaleString();
+  document.getElementById('qtNote').textContent=entries.length?`총 ${entries.length}개 항목 · VAT 별도`:'항목을 선택하면 자동 계산됩니다';
+  const rows=document.getElementById('qtRows');
+  if(!entries.length){rows.innerHTML='<div class="qt-empty">선택된 항목 없음</div>';document.getElementById('printBtn').disabled=true;return;}
+  rows.innerHTML=entries.map(({item,qty})=>{
+    const isArea=item.ul.includes('㎡'),p=item.u*qty*(isArea?areaM2:1);
+    return `<div class="qt-row"><span class="qt-row-name">${item.n} × ${isArea?areaM2+'㎡':qty}</span><span class="qt-row-amt">${p.toLocaleString()}원</span></div>`;
+  }).join('');
+  document.getElementById('printBtn').disabled=false;
+}
+
+function switchTab(name,btn){
+  ['manual','photo','chat','admin'].forEach(t=>document.getElementById('tab-'+t).style.display=t===name?'block':'none');
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(name==='admin')loadAdminTab();
+}
+
+// 사진 분석
+const photoInput=document.getElementById('photoInput');
+const uploadZone=document.getElementById('uploadZone');
+photoInput.addEventListener('change',e=>{const f=e.target.files[0];if(f)loadPhoto(f);});
+uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.style.borderColor='var(--accent)';});
+uploadZone.addEventListener('dragleave',()=>{uploadZone.style.borderColor='';});
+uploadZone.addEventListener('drop',e=>{e.preventDefault();uploadZone.style.borderColor='';const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))loadPhoto(f);});
+function loadPhoto(file){
+  const r=new FileReader();
+  r.onload=ev=>{
+    photoBase64=ev.target.result.split(',')[1];
+    document.getElementById('photoImg').src=ev.target.result;
+    document.getElementById('photoPreviewArea').style.display='block';
+    document.getElementById('aiResultArea').style.display='none';
+    document.getElementById('uploadZone').style.display='none';
+  };
+  r.readAsDataURL(file);
+}
+async function analyzePhoto(){
+  if(!photoBase64)return;
+  const btn=document.getElementById('analyzeBtn');
+  btn.disabled=true; btn.textContent='⏳ 분석 중...';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:`집수리 전문 AI입니다. 사진을 보고: 1)문제 설명 2)필요한 수리 작업 목록 3)예상 비용 범위(만원) 4)긴급도를 한국어로 간결하게 답하세요.`,
+        messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:'image/jpeg',data:photoBase64}},{type:'text',text:'집수리가 필요한 부분을 분석해주세요.'}]}]
+      })
+    });
+    const data=await r.json();
+    document.getElementById('aiResultText').textContent=data.content?.map(c=>c.text||'').join('')||'분석 실패';
+    document.getElementById('aiResultArea').style.display='block';
+  }catch(e){document.getElementById('aiResultText').textContent='연결 오류. 다시 시도해주세요.';document.getElementById('aiResultArea').style.display='block';}
+  btn.disabled=false; btn.textContent='🔄 다시 분석하기';
+}
+
+// AI 상담
+function quickAsk(msg){document.getElementById('chatIn').value=msg;sendChat();}
+async function sendChat(){
+  const inp=document.getElementById('chatIn');
+  const msg=inp.value.trim(); if(!msg)return;
+  inp.value=''; appendBubble('user',msg); chatHist.push({role:'user',content:msg});
+  const btn=document.getElementById('sendBtn'); btn.disabled=true;
+  const t=document.createElement('div'); t.className='bubble typing'; t.textContent='···';
+  document.getElementById('chatMsgs').appendChild(t); scrollChat();
+  const entries=Object.values(selItems);
+  const total=entries.reduce((s,{item,qty})=>s+item.u*qty*(item.ul.includes('㎡')?areaM2:1),0);
+  const ctx=entries.length?`선택항목: ${entries.map(e=>e.item.n).join(', ')} / 예상금액: ${total.toLocaleString()}원 / 면적: ${areaM2}㎡`:`아직 항목 선택 없음 / 면적: ${areaM2}㎡`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,
+        system:SYSTEM_PROMPT+'\n\n[현재 상담 맥락]\n'+ctx,
+        messages:chatHist
+      })
+    });
+    const data=await r.json(); t.remove();
+    const reply=data.content?.map(c=>c.text||'').join('')||'다시 시도해주세요.';
+    chatHist.push({role:'assistant',content:reply}); appendBubble('ai',reply);
+  }catch{t.remove(); appendBubble('ai','연결 오류입니다. 직접 전화 주세요 📞 010-9093-1727');}
+  btn.disabled=false;
+}
+function appendBubble(role,text){const el=document.createElement('div');el.className=`bubble ${role}`;el.textContent=text;document.getElementById('chatMsgs').appendChild(el);scrollChat();}
+function scrollChat(){const b=document.getElementById('chatMsgs');b.scrollTop=b.scrollHeight;}
+document.getElementById('chatIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey)sendChat();});
+
+// 견적서 출력
+function printQuote(){
+  const entries=Object.values(selItems); if(!entries.length)return;
+  const total=entries.reduce((s,{item,qty})=>s+item.u*qty*(item.ul.includes('㎡')?areaM2:1),0);
+  const rows=entries.map(({item,qty})=>{
+    const isArea=item.ul.includes('㎡'),p=item.u*qty*(isArea?areaM2:1);
+    return `<tr><td>${item.n}</td><td>${item.s}</td><td>${isArea?areaM2+'㎡':qty+'개'}</td><td>${item.u.toLocaleString()}원</td><td><strong>${p.toLocaleString()}원</strong></td></tr>`;
+  }).join('');
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>뽀바이집수리 견적서</title>
+  <style>body{font-family:sans-serif;padding:48px;color:#18171A;max-width:720px;margin:0 auto;}
+  h1{font-size:28px;font-weight:700;margin-bottom:4px;}.meta{font-size:13px;color:#888;margin-bottom:28px;}
+  table{width:100%;border-collapse:collapse;}th{background:#18171A;color:white;padding:12px;text-align:left;font-size:12px;}
+  td{padding:12px;border-bottom:1px solid #eee;font-size:13px;}.tr{background:#f7f7f7;font-weight:700;}
+  .footer{margin-top:20px;font-size:11px;color:#aaa;line-height:1.9;}
+  @media print{button{display:none;}}
+  .pb{margin-top:24px;padding:12px 24px;background:#1B7F5B;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}</style></head><body>
+  <h1>뽀바이집수리 견적서</h1>
+  <div class="meta">발행일: ${new Date().toLocaleDateString('ko-KR')} &nbsp;·&nbsp; 면적: ${areaM2}㎡ (약 ${(areaM2/3.3058).toFixed(1)}평) &nbsp;·&nbsp; 📞 010-9093-1727</div>
+  <table><thead><tr><th>항목</th><th>내용</th><th>수량</th><th>단가</th><th>금액</th></tr></thead><tbody>
+  ${rows}
+  <tr class="tr"><td colspan="4" style="text-align:right">합계</td><td>${total.toLocaleString()}원</td></tr>
+  <tr class="tr"><td colspan="4" style="text-align:right">VAT 10%</td><td>${Math.round(total*.1).toLocaleString()}원</td></tr>
+  <tr class="tr"><td colspan="4" style="text-align:right;color:#2B5BE0">최종 합계</td><td style="color:#2B5BE0">${Math.round(total*1.1).toLocaleString()}원</td></tr>
+  </tbody></table>
+  <div class="footer">※ 현장 상황에 따라 ±15% 변동 가능<br>※ 뽀바이집수리 · 제주도 전 지역 · 010-9093-1727</div>
+  <button class="pb" onclick="window.print()">🖨️ 인쇄하기</button></body></html>`);
+  w.document.close();
+}
+
+// 관리자
+function showToast(msg,err=false){const t=document.getElementById('toast');t.textContent=(err?'❌ ':'✅ ')+msg;t.style.background=err?'#D63B3B':'#18171A';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
+async function loadAdminTab(){await loadAdminCatGrid();}
+async function loadAdminCatGrid(){
+  const g=document.getElementById('adminCatGrid');
+  g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:16px;color:var(--ink3);font-size:12px;">⏳ 불러오는 중...</div>`;
+  try{
+    const d=await sbGet('categories','order=sort_order.asc');
+    CATS=d.map(c=>({id:c.id,e:c.emoji||'🔧',n:c.name,s:c.description||''}));
+    if(!d.length){g.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:16px;color:var(--ink3);font-size:12px;">카테고리 없음</div>`;return;}
+    g.innerHTML=d.map(c=>`
+      <div class="cat-card-admin ${adminCatId===c.id?'sel':''}" onclick="openAdminItems(${c.id},'${c.emoji||'🔧'}','${c.name.replace(/'/g,"\\'")}')">
+        <div style="font-size:20px;margin-bottom:4px;">${c.emoji||'🔧'}</div>
+        <div style="font-size:11px;font-weight:700;">${c.name}</div>
+        <div style="font-size:9px;color:var(--ink3);margin-top:1px;">${c.description||''}</div>
+        <button onclick="event.stopPropagation();deleteCat(${c.id},'${c.name.replace(/'/g,"\\'")}') "
+          style="position:absolute;top:5px;right:5px;background:none;border:none;color:var(--ink3);cursor:pointer;font-size:12px;padding:2px 4px;" title="삭제">✕</button>
+      </div>`).join('');
+  }catch(e){g.innerHTML=`<div style="grid-column:1/-1;color:var(--red);padding:12px;font-size:12px;">${e.message}</div>`;}
+}
+async function openAdminItems(id,emoji,name){
+  adminCatId=id;
+  document.getElementById('adminItemTitle').textContent=`${emoji} ${name} — 수리 항목`;
+  const s=document.getElementById('adminItemSection'); s.style.display='block';
+  await loadAdminCatGrid(); await loadItemTable();
+  setTimeout(()=>s.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+}
+function closeAdminItems(){adminCatId=null;document.getElementById('adminItemSection').style.display='none';loadAdminCatGrid();}
+async function loadItemTable(){
+  if(!adminCatId)return;
+  const tbody=document.getElementById('itemTableBody');
+  tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;color:var(--ink3);padding:12px;font-size:12px;">⏳</td></tr>`;
+  try{
+    const items=await sbGet('repair_items',`category_id=eq.${adminCatId}&order=id.asc`);
+    if(!items.length){tbody.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--ink3);padding:12px;font-size:12px;">항목 없음 — 위에서 추가하세요!</td></tr>';return;}
+    tbody.innerHTML=items.map(i=>`<tr>
+      <td><strong>${i.name}</strong></td>
+      <td style="color:var(--ink3);font-size:11px;">${i.description||'-'}</td>
+      <td style="font-weight:700;color:var(--accent);">${Number(i.unit_price).toLocaleString()}원</td>
+      <td style="color:var(--ink3);">${i.unit_label||'개당'}</td>
+      <td><button class="admin-btn dn" onclick="deleteItm(${i.id},'${i.name.replace(/'/g,"\\'")}')">삭제</button></td>
+    </tr>`).join('');
+  }catch(e){tbody.innerHTML=`<tr><td colspan="5" style="color:var(--red);padding:12px;">${e.message}</td></tr>`;}
+}
+async function addCategory(){
+  const emoji=document.getElementById('nCatEmoji').value.trim();
+  const name=document.getElementById('nCatName').value.trim();
+  const desc=document.getElementById('nCatDesc').value.trim();
+  const order=parseInt(document.getElementById('nCatOrder').value)||10;
+  if(!name){showToast('이름을 입력해주세요',true);return;}
+  try{
+    await sbPost('categories',{name,emoji,description:desc,sort_order:order});
+    document.getElementById('nCatName').value='';
+    document.getElementById('nCatEmoji').value='';
+    document.getElementById('nCatDesc').value='';
+    IDB={}; await loadAdminCatGrid(); renderCats();
+    showToast(`'${name}' 카테고리 추가됐어요!`);
+  }catch(e){showToast(e.message,true);}
+}
+async function addItem(){
+  if(!adminCatId){showToast('카테고리를 먼저 클릭해주세요',true);return;}
+  const name=document.getElementById('nItemName').value.trim();
+  const desc=document.getElementById('nItemDesc').value.trim();
+  const price=parseInt(document.getElementById('nItemPrice').value);
+  const unit=document.getElementById('nItemUnit').value;
+  if(!name){showToast('항목명을 입력해주세요',true);return;}
+  if(!price){showToast('단가를 입력해주세요',true);return;}
+  try{
+    await sbPost('repair_items',{category_id:adminCatId,name,description:desc,unit_price:price,unit_label:unit});
+    document.getElementById('nItemName').value='';
+    document.getElementById('nItemDesc').value='';
+    document.getElementById('nItemPrice').value='';
+    IDB={}; await loadItemTable();
+    showToast(`'${name}' 항목 추가됐어요!`);
+  }catch(e){showToast(e.message,true);}
+}
+async function deleteCat(id,name){
+  if(!confirm(`'${name}' 카테고리를 삭제할까요?\n수리 항목도 함께 삭제됩니다.`))return;
+  try{
+    await sbDel('repair_items',`category_id=eq.${id}`);
+    await sbDel('categories',id);
+    if(adminCatId===id){adminCatId=null;document.getElementById('adminItemSection').style.display='none';}
+    IDB={}; await loadAdminCatGrid(); renderCats();
+    showToast(`'${name}' 삭제됐어요`);
+  }catch(e){showToast(e.message,true);}
+}
+async function deleteItm(id,name){
+  if(!confirm(`'${name}' 삭제할까요?`))return;
+  try{await sbDel('repair_items',id);IDB={};await loadItemTable();showToast(`'${name}' 삭제됐어요`);}
+  catch(e){showToast(e.message,true);}
+}
+
+init();
+</script>
+</body>
+</html>
